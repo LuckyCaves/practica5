@@ -60,10 +60,20 @@ footer { border-top: 1px solid #33414b; padding: 25px 0; color: #b8c5d0; font-si
 </body>
 </html>`;
 
+export interface Env {
+	practica6: D1Database;
+}
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
-		return new Response(page, {
-			headers: { "Content-Type": "text/html; charset=UTF-8" },
-		});
+		const data = await this.queryDatabase(env.practica6);
+		return Response.json({message: "Hello world", dbData: data});
+		// return new Response(page, {
+		// 	headers: { "Content-Type": "text/html; charset=UTF-8" },
+		// });
 	},
+
+	async queryDatabase(db: D1Database){
+		const { results } = await db.prepare("SELECT * FROM users").all();
+		return results;
+	}
 } satisfies ExportedHandler<Env>;
