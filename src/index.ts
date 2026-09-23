@@ -63,17 +63,20 @@ footer { border-top: 1px solid #33414b; padding: 25px 0; color: #b8c5d0; font-si
 export interface Env {
 	practica6: D1Database;
 }
-export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		const data = await this.queryDatabase(env.practica6);
-		return Response.json({message: "Hello world", dbData: data});
-		// return new Response(page, {
-		// 	headers: { "Content-Type": "text/html; charset=UTF-8" },
-		// });
-	},
 
-	async queryDatabase(db: D1Database){
+async function queryDatabase(db: D1Database){
 		const { results } = await db.prepare("SELECT * FROM users").all();
 		return results;
 	}
+
+export default {
+	async fetch(request, env, ctx): Promise<Response> {
+		const data = await queryDatabase(env.practica6);
+		return Response.json({message: "Hello world", dbData: data});
+		// return new Response(page, {
+			// 	headers: { "Content-Type": "text/html; charset=UTF-8" },
+		// });
+	},
+	
+	
 } satisfies ExportedHandler<Env>;
