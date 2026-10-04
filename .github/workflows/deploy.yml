@@ -19,23 +19,20 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: practica5/package-lock.json
+          cache-dependency-path: package-lock.json
       - name: Install dependencies
         run: npm ci
-        working-directory: practica5
       - name: Build Worker bundle
         run: npm run build
-        working-directory: practica5
       - name: Run unit tests with coverage
         run: npm run test:coverage
-        working-directory: practica5
       - name: Publish bundle and coverage reports
         uses: actions/upload-artifact@v4
         with:
           name: practica5-build-and-coverage
           path: |
-            practica5/dist/
-            practica5/coverage/
+            dist/
+            coverage/
           if-no-files-found: error
 
   deploy-production:
@@ -52,15 +49,13 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: practica5/package-lock.json
+          cache-dependency-path: package-lock.json
       - name: Install dependencies
         run: npm ci
-        working-directory: practica5
       - name: Deploy production Worker
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: practica5
           command: deploy --env production
 
